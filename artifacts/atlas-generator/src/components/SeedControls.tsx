@@ -64,7 +64,8 @@ export function SeedControls({ seed, onSeedChange }: Props) {
         <button
           onClick={handleRandomize}
           title="Generate random seed"
-          className="px-3 py-2 rounded bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 text-lg leading-none transition-all"
+          aria-label="Generate random seed"
+          className="px-3 py-2 rounded bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 text-lg leading-none transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
         >
           🎲
         </button>
@@ -80,7 +81,8 @@ export function SeedControls({ seed, onSeedChange }: Props) {
               setIsString(false);
               onSeedChange(p.value >>> 0);
             }}
-            className="px-2 py-1 rounded text-xs bg-muted/40 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+            aria-label={`Seed preset ${p.label}`}
+            className="px-2 py-1 rounded text-xs bg-muted/40 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             {p.label}
           </button>
