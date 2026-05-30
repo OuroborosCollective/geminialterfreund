@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { seedFromString } from "@/lib/prng";
 
 interface Props {
@@ -9,7 +9,15 @@ interface Props {
 export function SeedControls({ seed, onSeedChange }: Props) {
   const [inputVal, setInputVal] = useState(String(seed));
   const [isString, setIsString] = useState(false);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const copyTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) window.clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
 
   const handleRandomize = useCallback(() => {
     const newSeed = Math.floor(Math.random() * 0xffffffff);
@@ -17,6 +25,13 @@ export function SeedControls({ seed, onSeedChange }: Props) {
     setIsString(false);
     onSeedChange(newSeed);
   }, [onSeedChange]);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(inputVal);
+    setCopied(true);
+    if (copyTimeoutRef.current) window.clearTimeout(copyTimeoutRef.current);
+    copyTimeoutRef.current = window.setTimeout(() => setCopied(false), 2000);
+  }, [inputVal]);
 
   const handleInputChange = useCallback((val: string) => {
     setInputVal(val);
@@ -43,17 +58,20 @@ export function SeedControls({ seed, onSeedChange }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Seed</div>
+      <label htmlFor="seed-input" className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        Seed
+      </label>
 
       {/* Seed input row */}
       <div className="flex gap-2">
         <div className="flex-1 relative">
           <input
+            id="seed-input"
             ref={inputRef}
             value={inputVal}
             onChange={e => handleInputChange(e.target.value)}
             placeholder="Enter number or string…"
-            className="w-full bg-muted/40 border border-border/60 rounded px-3 py-2 text-sm font-mono text-foreground/90 focus:outline-none focus:border-primary/60 focus:bg-muted/60 transition-colors"
+            className="w-full bg-muted/40 border border-border/60 rounded px-3 py-2 text-sm font-mono text-foreground/90 focus:outline-none focus:border-primary/60 focus:bg-muted/60 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           />
           {isString && (
             <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-accent/60 font-mono">
@@ -62,10 +80,22 @@ export function SeedControls({ seed, onSeedChange }: Props) {
           )}
         </div>
         <button
+          onClick={handleCopy}
+          title={copied ? "Copied!" : "Copy seed"}
+          aria-label={copied ? "Copied!" : "Copy seed"}
+          className={`px-3 py-2 rounded border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+            copied
+              ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
+              : "bg-muted/40 border-border/40 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          }`}
+        >
+          {copied ? "✓" : "📋"}
+        </button>
+        <button
           onClick={handleRandomize}
           title="Generate random seed"
           aria-label="Generate random seed"
-          className="px-3 py-2 rounded bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 text-lg leading-none transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          className="px-3 py-2 rounded bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 text-lg leading-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           🎲
         </button>
@@ -82,7 +112,7 @@ export function SeedControls({ seed, onSeedChange }: Props) {
               onSeedChange(p.value >>> 0);
             }}
             aria-label={`Seed preset ${p.label}`}
-            className="px-2 py-1 rounded text-xs bg-muted/40 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="px-2 py-1 rounded text-xs bg-muted/40 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {p.label}
           </button>
