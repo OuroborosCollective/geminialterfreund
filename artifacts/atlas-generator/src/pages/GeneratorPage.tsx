@@ -105,8 +105,10 @@ export function GeneratorPage() {
                     <button
                       key={s.id}
                       title={s.name}
+                      aria-label={`Skin tone: ${s.name}`}
+                      aria-pressed={skinId === s.id}
                       onClick={() => setSkinId(s.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all ${skinId === s.id ? "border-accent scale-125" : "border-transparent"}`}
+                      className={`w-5 h-5 rounded-full border-2 transition-all ${skinId === s.id ? "border-accent scale-125" : "border-transparent"} focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none`}
                       style={{ background: s.hex }}
                     />
                   ))}
@@ -119,8 +121,10 @@ export function GeneratorPage() {
                     <button
                       key={h.id}
                       title={h.name}
+                      aria-label={`Hair color: ${h.name}`}
+                      aria-pressed={hairId === h.id}
                       onClick={() => setHairId(h.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all ${hairId === h.id ? "border-accent scale-125" : "border-transparent"}`}
+                      className={`w-5 h-5 rounded-full border-2 transition-all ${hairId === h.id ? "border-accent scale-125" : "border-transparent"} focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none`}
                       style={{ background: h.hex }}
                     />
                   ))}
@@ -153,7 +157,8 @@ export function GeneratorPage() {
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`px-4 py-2.5 text-xs font-medium transition-colors border-b-2 whitespace-nowrap ${
+                aria-pressed={tab === t.id}
+                className={`px-4 py-2.5 text-xs font-medium transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:bg-white/5 ${
                   tab === t.id
                     ? t.id === "armor"
                       ? "border-violet-500 text-foreground"
