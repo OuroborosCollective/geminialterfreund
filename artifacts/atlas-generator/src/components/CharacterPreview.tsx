@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { drawCharacterFrame } from "@/lib/spriteRenderer";
+import { drawCharacterFrame, getScratchCanvas } from "@/lib/spriteRenderer";
 import type { CharacterConfig } from "@/lib/characterAssembler";
 import type { AnimationName, Direction } from "@/lib/partDefinitions";
 import { ANIMATION_DEFS, SPRITE_SIZE, DIRECTIONS } from "@/lib/partDefinitions";
@@ -44,9 +44,7 @@ export function CharacterPreview({ config, anim, dir, frame, scale = 4, spritesR
       return;
     }
 
-    const off = document.createElement("canvas");
-    off.width = SPRITE_SIZE; off.height = SPRITE_SIZE;
-    const offCtx = off.getContext("2d")!;
+    const { canvas: off, ctx: offCtx } = getScratchCanvas();
     drawCharacterFrame(offCtx, 0, 0, dir, anim, frame, config.palette, config.layers);
 
     ctx.imageSmoothingEnabled = false;
@@ -82,9 +80,8 @@ export function DirectionGrid({ config, anim, frame }: {
       const ctx = canvas.getContext("2d")!;
       const size = SPRITE_SIZE * 2;
       checkerboard(ctx, size, size, 8);
-      const off = document.createElement("canvas");
-      off.width = SPRITE_SIZE; off.height = SPRITE_SIZE;
-      drawCharacterFrame(off.getContext("2d")!, 0, 0, dir, anim, frame, config.palette, config.layers);
+      const { canvas: off, ctx: offCtx } = getScratchCanvas();
+      drawCharacterFrame(offCtx, 0, 0, dir, anim, frame, config.palette, config.layers);
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(off, 0, 0, size, size);
     });
@@ -130,9 +127,8 @@ export function AtlasStripPreview({ config, anim, dir }: {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let f = 0; f < def.frames; f++) {
-      const off = document.createElement("canvas");
-      off.width = size; off.height = size;
-      drawCharacterFrame(off.getContext("2d")!, 0, 0, dir, anim, f, config.palette, config.layers);
+      const { canvas: off, ctx: offCtx } = getScratchCanvas();
+      drawCharacterFrame(offCtx, 0, 0, dir, anim, f, config.palette, config.layers);
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(off, f * size * scale, 0, size * scale, size * scale);
       ctx.strokeStyle = "rgba(255,200,60,0.2)";
