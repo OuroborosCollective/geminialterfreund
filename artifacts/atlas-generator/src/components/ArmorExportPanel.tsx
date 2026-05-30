@@ -149,7 +149,8 @@ export function ArmorExportPanel() {
             <button
               key={sl}
               onClick={() => toggleSlot(sl)}
-              className={`px-2 py-1.5 rounded text-[10px] font-medium transition-colors border text-left ${
+              aria-pressed={selSlots.has(sl)}
+              className={`px-2 py-1.5 rounded text-[10px] font-medium transition-colors border text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                 selSlots.has(sl)
                   ? "border-accent/60 bg-accent/12 text-foreground"
                   : "border-white/8 bg-white/3 text-muted-foreground"
@@ -175,7 +176,8 @@ export function ArmorExportPanel() {
             <button
               key={tier}
               onClick={() => toggleTier(tier)}
-              className={`flex-1 px-1.5 py-1 rounded text-[10px] font-medium transition-all border ${
+              aria-pressed={tiers.has(tier)}
+              className={`flex-1 px-1.5 py-1 rounded text-[10px] font-medium transition-all border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                 tiers.has(tier) ? color : "border-white/8 bg-white/3 text-muted-foreground/40"
               }`}
             >
@@ -247,7 +249,7 @@ export function ArmorExportPanel() {
         onClick={() => { setState("idle"); setMsg(""); handleExport(); }}
         disabled={state === "packing" || selSlots.size === 0}
         className="w-full py-2.5 rounded-lg bg-violet-600 text-white font-semibold text-sm
-          disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500 transition-colors"
+          disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1019]"
       >
         {state === "packing" ? "⏳ Rendering Armor…" : "⬇ Download Armor Atlas (.zip)"}
       </button>
@@ -394,7 +396,8 @@ function OptionGroup({ label, opts, value, onChange }: {
       <div className="flex flex-col gap-1">
         {opts.map(o => (
           <button key={o.value} onClick={() => onChange(o.value)}
-            className={`px-2.5 py-1.5 rounded-lg text-left transition-colors border ${
+            aria-pressed={value === o.value}
+            className={`px-2.5 py-1.5 rounded-lg text-left transition-colors border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-violet-500 ${
               value === o.value
                 ? "border-violet-500/60 bg-violet-500/15 text-foreground"
                 : "border-white/8 bg-white/3 text-muted-foreground hover:bg-white/8"
