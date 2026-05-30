@@ -50,9 +50,9 @@ export function LayerPanel({ config, onChange }: Props) {
               activeCategory === cat
                 ? "bg-accent/90 text-background"
                 : "bg-white/5 hover:bg-white/12 text-muted-foreground"
-            }`}
+            } focus-visible:ring-2 focus-visible:ring-accent focus:outline-none`}
           >
-            {CAT_ICONS[cat]} {CAT_LABELS[cat]}
+            <span aria-hidden="true">{CAT_ICONS[cat]}</span> {CAT_LABELS[cat]}
           </button>
         ))}
         <button
@@ -62,9 +62,9 @@ export function LayerPanel({ config, onChange }: Props) {
             activeCategory === "aura"
               ? "bg-accent/90 text-background"
               : "bg-white/5 hover:bg-white/12 text-muted-foreground"
-          }`}
+          } focus-visible:ring-2 focus-visible:ring-accent focus:outline-none`}
         >
-          ✨ Aura
+          <span aria-hidden="true">✨</span> Aura
         </button>
       </div>
 

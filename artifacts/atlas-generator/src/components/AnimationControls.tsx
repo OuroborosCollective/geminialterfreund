@@ -57,9 +57,9 @@ export function AnimationControls({
                 a === anim
                   ? "bg-primary/20 border border-primary/60 text-primary font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
+              } focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none`}
             >
-              <span>{ANIM_ICONS[a]}</span>
+              <span aria-hidden="true">{ANIM_ICONS[a]}</span>
               <span className="capitalize">{a}</span>
               <span className="text-[10px] opacity-60">{ANIMATION_DEFS[a].frames}f</span>
             </button>
@@ -80,7 +80,7 @@ export function AnimationControls({
                 d === dir
                   ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
-              }`}
+              } focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`}
             >
               {DIR_ICONS[d]}
             </button>
