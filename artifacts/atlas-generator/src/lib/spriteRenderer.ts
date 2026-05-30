@@ -548,6 +548,22 @@ function drawFallbackCharacter(
   ctx.beginPath(); ctx.ellipse(cx + ox, headCY - hh * 0.12, Math.abs(hw) + 1.5, hh * 0.88, 0, Math.PI, 0); ctx.fill();
 }
 
+// ─── Utility: Shared Offscreen Canvas (GC Optimization) ───────────
+
+let _scratchCanvas: HTMLCanvasElement | null = null;
+
+/** Returns a shared 96x96 offscreen canvas to reduce GC pressure during animation loops */
+export function getScratchCanvas(): { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D } {
+  if (!_scratchCanvas) {
+    _scratchCanvas = document.createElement("canvas");
+    _scratchCanvas.width = SPRITE_SIZE;
+    _scratchCanvas.height = SPRITE_SIZE;
+  }
+  const ctx = _scratchCanvas.getContext("2d")!;
+  ctx.clearRect(0, 0, SPRITE_SIZE, SPRITE_SIZE);
+  return { canvas: _scratchCanvas, ctx };
+}
+
 // ─── Main draw entry point ────────────────────────────────────────
 
 export function drawCharacterFrame(
@@ -565,13 +581,19 @@ export function drawCharacterFrame(
 
   if (ao.alpha < 1) ctx.globalAlpha = Math.max(0, ao.alpha);
 
+  // Index layers for O(1) lookup
+  const layerMap: Partial<Record<PartCategory, number>> = {};
+  for (let i = 0; i < layers.length; i++) {
+    layerMap[layers[i].category] = layers[i].variantIndex;
+  }
+
   // 1. Shadow — perspective ellipse
   drawShadow(ctx, S / 2 + ao.dx, S * 0.90 + dt.yShift * 0.15, dt.scaleX, dt.scaleY);
 
   // 2. Aura (secondary motion — independent timing)
-  const auraLayer = layers.find(l => l.category === "aura");
-  if (auraLayer && auraLayer.variantIndex > 0) {
-    drawAura(ctx, S, auraLayer.variantIndex, palette, frame);
+  const auraVar = layerMap["aura"];
+  if (auraVar !== undefined && auraVar > 0) {
+    drawAura(ctx, S, auraVar, palette, frame);
   }
 
   // 3. Determine AI sprite
@@ -583,9 +605,9 @@ export function drawCharacterFrame(
 
   // 4. Cape (behind body — fallback only)
   if (!usingAI) {
-    const capeLayer = layers.find(l => l.category === "cape");
-    if (capeLayer && capeLayer.variantIndex > 0) {
-      drawCapeOverlay(ctx, S, capeLayer.variantIndex, palette, dt);
+    const capeVar = layerMap["cape"];
+    if (capeVar !== undefined && capeVar > 0) {
+      drawCapeOverlay(ctx, S, capeVar, palette, dt);
     }
   }
 
@@ -598,20 +620,21 @@ export function drawCharacterFrame(
 
   // 6. Procedural overlays (fallback only — AI sprites are already complete)
   if (!usingAI) {
-    const shouldersLayer = layers.find(l => l.category === "shoulders");
-    if (shouldersLayer && shouldersLayer.variantIndex > 0)
-      drawShouldersOverlay(ctx, S, shouldersLayer.variantIndex, palette, dt);
+    const shouldersVar = layerMap["shoulders"];
+    if (shouldersVar !== undefined && shouldersVar > 0)
+      drawShouldersOverlay(ctx, S, shouldersVar, palette, dt);
 
-    const hairLayer = layers.find(l => l.category === "hair");
-    if (hairLayer) drawHairOverlay(ctx, S, hairLayer.variantIndex, palette, dt);
+    const hairVar = layerMap["hair"];
+    if (hairVar !== undefined)
+      drawHairOverlay(ctx, S, hairVar, palette, dt);
 
-    const facialLayer = layers.find(l => l.category === "facial");
-    if (facialLayer && facialLayer.variantIndex > 0)
-      drawFacialOverlay(ctx, S, facialLayer.variantIndex, palette, dt);
+    const facialVar = layerMap["facial"];
+    if (facialVar !== undefined && facialVar > 0)
+      drawFacialOverlay(ctx, S, facialVar, palette, dt);
 
-    const accessoryLayer = layers.find(l => l.category === "accessory");
-    if (accessoryLayer && accessoryLayer.variantIndex > 0)
-      drawAccessoryOverlay(ctx, S, accessoryLayer.variantIndex, palette, dt);
+    const accessoryVar = layerMap["accessory"];
+    if (accessoryVar !== undefined && accessoryVar > 0)
+      drawAccessoryOverlay(ctx, S, accessoryVar, palette, dt);
   }
 
   ctx.restore();
