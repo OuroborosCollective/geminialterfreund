@@ -46,7 +46,7 @@ export function LayerPanel({ config, onChange }: Props) {
             key={cat}
             onClick={() => setActiveCategory(cat)}
             aria-pressed={activeCategory === cat}
-            className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+            className={`px-2 py-1 rounded text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
               activeCategory === cat
                 ? "bg-accent/90 text-background"
                 : "bg-white/5 hover:bg-white/12 text-muted-foreground"
@@ -58,7 +58,7 @@ export function LayerPanel({ config, onChange }: Props) {
         <button
           onClick={() => setActiveCategory("aura")}
           aria-pressed={activeCategory === "aura"}
-          className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+          className={`px-2 py-1 rounded text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
             activeCategory === "aura"
               ? "bg-accent/90 text-background"
               : "bg-white/5 hover:bg-white/12 text-muted-foreground"
@@ -75,7 +75,8 @@ export function LayerPanel({ config, onChange }: Props) {
             <button
               key={variant.id}
               onClick={() => handleSwap(variant.shapeCode)}
-              className={`p-2 rounded-lg text-left transition-all border ${
+              aria-pressed={currentVariantIdx === variant.shapeCode}
+              className={`p-2 rounded-lg text-left transition-all border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                 currentVariantIdx === variant.shapeCode
                   ? "border-accent bg-accent/15 text-foreground"
                   : "border-white/8 bg-white/3 hover:bg-white/8 text-muted-foreground"

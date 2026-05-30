@@ -1,3 +1,3 @@
-## 2025-05-15 - [Interactive Element Accessibility]
-**Learning:** In highly interactive generators (like character creators), small touchpoints like color swatches and animation toggles often lack clear keyboard focus indicators and ARIA states, making them difficult to use for screen reader or keyboard-only users.
-**Action:** Always ensure `aria-pressed` is used for selection/toggle states and `focus-visible` rings are applied to custom-styled buttons (like round color swatches) to maintain visibility during keyboard navigation.
+## 2025-05-29 - [Character Generator Accessibility]
+**Learning:** In highly interactive procedural generators like this one, icon-only buttons (like the 🎲 dice) and color swatches are often missing proper screen reader labels and focus indicators, making them completely inaccessible to keyboard users.
+**Action:** Always systematically audit selection grids (swatches, tabs, variant pickers) for `aria-pressed` and `focus-visible` rings. Use `focus-visible` to ensure the UI remains clean for mouse users while being functional for keyboard navigation.

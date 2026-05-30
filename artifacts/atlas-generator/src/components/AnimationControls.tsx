@@ -53,8 +53,7 @@ export function AnimationControls({
               key={a}
               onClick={() => onAnimChange(a)}
               aria-pressed={a === anim}
-              aria-label={`Animation: ${a}`}
-              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-all ${
+              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
                 a === anim
                   ? "bg-primary/20 border border-primary/60 text-primary font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -77,8 +76,7 @@ export function AnimationControls({
               key={d}
               onClick={() => onDirChange(d)}
               aria-pressed={d === dir}
-              aria-label={`Direction: ${d}`}
-              className={`px-2 py-1 rounded text-xs transition-all ${
+              className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                 d === dir
                   ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
@@ -98,8 +96,8 @@ export function AnimationControls({
         <div className="flex items-center gap-2">
           <button
             onClick={onTogglePlay}
-            aria-pressed={playing}
-            className="px-3 py-1.5 rounded bg-primary/20 border border-primary/50 text-primary hover:bg-primary/30 text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            aria-label={playing ? "Pause animation" : "Play animation"}
+            className="px-3 py-1.5 rounded bg-primary/20 border border-primary/50 text-primary hover:bg-primary/30 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             {playing ? "⏸ Pause" : "▶ Play"}
           </button>

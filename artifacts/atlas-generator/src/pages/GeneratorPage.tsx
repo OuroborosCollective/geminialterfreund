@@ -108,7 +108,7 @@ export function GeneratorPage() {
                       aria-label={`Skin tone: ${s.name}`}
                       aria-pressed={skinId === s.id}
                       onClick={() => setSkinId(s.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all ${skinId === s.id ? "border-accent scale-125" : "border-transparent"} focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none`}
+                      className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${skinId === s.id ? "border-accent scale-125" : "border-transparent"}`}
                       style={{ background: s.hex }}
                     />
                   ))}
@@ -124,18 +124,19 @@ export function GeneratorPage() {
                       aria-label={`Hair color: ${h.name}`}
                       aria-pressed={hairId === h.id}
                       onClick={() => setHairId(h.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all ${hairId === h.id ? "border-accent scale-125" : "border-transparent"} focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus:outline-none`}
+                      className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${hairId === h.id ? "border-accent scale-125" : "border-transparent"}`}
                       style={{ background: h.hex }}
                     />
                   ))}
                 </div>
               </div>
               <div>
-                <label className="text-[10px] text-muted-foreground/50">Equipment color</label>
+                <label htmlFor="equipment-color" className="text-[10px] text-muted-foreground/50">Equipment color</label>
                 <select
+                  id="equipment-color"
                   value={schemeId}
                   onChange={e => setSchemeId(e.target.value)}
-                  className="mt-0.5 w-full bg-white/5 border border-white/10 rounded text-xs px-1.5 py-1 text-foreground"
+                  className="mt-0.5 w-full bg-white/5 border border-white/10 rounded text-xs px-1.5 py-1 text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   {ARMOR_SCHEMES.map(s => (
                     <option key={s.id} value={s.id}>{s.name}</option>
@@ -189,7 +190,7 @@ export function GeneratorPage() {
                 )}
                 <button
                   onClick={handleRandom}
-                  className="px-4 py-2 rounded-lg bg-white/8 hover:bg-white/14 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-white/8 hover:bg-white/14 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   🎲 Random Character
                 </button>

@@ -253,7 +253,7 @@ export function ExportPanel({ config }: Props) {
         onClick={() => { setState("idle"); setMsg(""); handleExport(); }}
         disabled={state === "packing"}
         className="w-full py-2.5 rounded-lg bg-accent text-background font-semibold text-sm
-          disabled:opacity-50 disabled:cursor-not-allowed hover:bg-accent/90 transition-colors"
+          disabled:opacity-50 disabled:cursor-not-allowed hover:bg-accent/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1019]"
       >
         {state === "packing" ? "⏳ Generating…" : "⬇ Download Atlas (.zip)"}
       </button>
@@ -283,7 +283,8 @@ function ModeBtn({ active, onClick, title, sub }: {
 }) {
   return (
     <button onClick={onClick}
-      className={`px-3 py-2 rounded-lg text-left transition-colors border ${
+      aria-pressed={active}
+      className={`px-3 py-2 rounded-lg text-left transition-colors border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
         active ? "border-accent bg-accent/15 text-foreground" : "border-white/8 bg-white/3 text-muted-foreground hover:bg-white/8"
       }`}>
       <div className="text-xs font-semibold">{title}</div>
@@ -302,7 +303,8 @@ function OptionGroup({ label, opts, value, onChange }: {
       <div className="flex flex-col gap-1">
         {opts.map(o => (
           <button key={o.value} onClick={() => onChange(o.value)}
-            className={`px-2.5 py-1.5 rounded-lg text-left transition-colors border ${
+            aria-pressed={value === o.value}
+            className={`px-2.5 py-1.5 rounded-lg text-left transition-colors border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
               value === o.value
                 ? "border-accent bg-accent/15 text-foreground"
                 : "border-white/8 bg-white/3 text-muted-foreground hover:bg-white/8"
