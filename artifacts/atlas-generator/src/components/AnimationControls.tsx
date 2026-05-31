@@ -25,6 +25,17 @@ const DIR_ICONS: Record<Direction, string> = {
   southeast: "↘ SE",
 };
 
+const DIR_LABELS: Record<Direction, string> = {
+  south:     "South",
+  southwest: "South West",
+  west:      "West",
+  northwest: "North West",
+  north:     "North",
+  northeast: "North East",
+  east:      "East",
+  southeast: "South East",
+};
+
 interface Props {
   anim: AnimationName;
   dir: Direction;
@@ -76,13 +87,14 @@ export function AnimationControls({
               key={d}
               onClick={() => onDirChange(d)}
               aria-pressed={d === dir}
+              aria-label={DIR_LABELS[d]}
               className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                 d === dir
                   ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
               } focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`}
             >
-              {DIR_ICONS[d]}
+              <span aria-hidden="true">{DIR_ICONS[d]}</span>
             </button>
           ))}
         </div>

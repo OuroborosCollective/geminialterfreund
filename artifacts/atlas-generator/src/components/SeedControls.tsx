@@ -67,7 +67,7 @@ export function SeedControls({ seed, onSeedChange }: Props) {
           aria-label="Generate random seed"
           className="px-3 py-2 rounded bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 text-lg leading-none transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
         >
-          🎲
+          <span aria-hidden="true">🎲</span>
         </button>
       </div>
 

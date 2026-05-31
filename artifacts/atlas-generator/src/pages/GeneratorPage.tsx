@@ -192,7 +192,7 @@ export function GeneratorPage() {
                   onClick={handleRandom}
                   className="px-4 py-2 rounded-lg bg-white/8 hover:bg-white/14 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
-                  🎲 Random Character
+                  <span aria-hidden="true">🎲</span> Random Character
                 </button>
               </div>
             )}

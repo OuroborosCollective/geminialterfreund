@@ -1,0 +1,7 @@
+
+> @workspace/atlas-generator@0.0.0 dev /app/artifacts/atlas-generator
+> vite --config vite.config.ts --host 0.0.0.0
+
+sh: 1: vite: not found
+ ELIFECYCLE  Command failed.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
