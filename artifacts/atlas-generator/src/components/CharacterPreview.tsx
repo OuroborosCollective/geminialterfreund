@@ -16,12 +16,32 @@ interface Props {
 const BG_DARK  = "#181924";
 const BG_LIGHT = "#1d1f32";
 
+// Cache for checkerboard patterns to avoid O(N^2) fillRect calls in the render loop
+const patternCache = new Map<number, CanvasPattern | null>();
+
 function checkerboard(ctx: CanvasRenderingContext2D, w: number, h: number, ts = 16) {
-  for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
-    for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
-      ctx.fillStyle = (tx + ty) % 2 === 0 ? BG_DARK : BG_LIGHT;
-      ctx.fillRect(tx * ts, ty * ts, ts, ts);
-    }
+  let pattern = patternCache.get(ts);
+  if (pattern === undefined) {
+    const canvas = document.createElement("canvas");
+    canvas.width = ts * 2;
+    canvas.height = ts * 2;
+    const pctx = canvas.getContext("2d")!;
+
+    pctx.fillStyle = BG_DARK;
+    pctx.fillRect(0, 0, ts, ts);
+    pctx.fillRect(ts, ts, ts, ts);
+
+    pctx.fillStyle = BG_LIGHT;
+    pctx.fillRect(ts, 0, ts, ts);
+    pctx.fillRect(0, ts, ts, ts);
+
+    pattern = ctx.createPattern(canvas, "repeat");
+    patternCache.set(ts, pattern);
+  }
+
+  if (pattern) {
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, w, h);
   }
 }
 
