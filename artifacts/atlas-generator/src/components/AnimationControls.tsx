@@ -1,5 +1,10 @@
 import { ANIMATIONS, ANIMATION_DEFS, DIRECTIONS } from "@/lib/partDefinitions";
 import type { AnimationName, Direction } from "@/lib/partDefinitions";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ANIM_ICONS: Record<AnimationName, string> = {
   idle:     "⏸",
@@ -23,6 +28,17 @@ const DIR_ICONS: Record<Direction, string> = {
   northeast: "↗ NE",
   east:      "→ E",
   southeast: "↘ SE",
+};
+
+const DIR_LABELS: Record<Direction, string> = {
+  south:     "South",
+  southwest: "South West",
+  west:      "West",
+  northwest: "North West",
+  north:     "North",
+  northeast: "North East",
+  east:      "East",
+  southeast: "South East",
 };
 
 interface Props {
@@ -72,18 +88,23 @@ export function AnimationControls({
         <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Direction</div>
         <div className="grid grid-cols-4 gap-1">
           {DIRECTIONS.map(d => (
-            <button
-              key={d}
-              onClick={() => onDirChange(d)}
-              aria-pressed={d === dir}
-              className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
-                d === dir
-                  ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
-                  : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
-              } focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`}
-            >
-              {DIR_ICONS[d]}
-            </button>
+            <Tooltip key={d}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onDirChange(d)}
+                  aria-pressed={d === dir}
+                  aria-label={DIR_LABELS[d]}
+                  className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
+                    d === dir
+                      ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
+                      : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
+                  } focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`}
+                >
+                  <span aria-hidden="true">{DIR_ICONS[d]}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{DIR_LABELS[d]}</TooltipContent>
+            </Tooltip>
           ))}
         </div>
       </div>
