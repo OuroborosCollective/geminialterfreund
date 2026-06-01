@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { drawCharacterFrame, getScratchCanvas } from "@/lib/spriteRenderer";
+import { drawCharacterFrame, getScratchCanvas, drawCheckerboard } from "@/lib/spriteRenderer";
 import type { CharacterConfig } from "@/lib/characterAssembler";
 import type { AnimationName, Direction } from "@/lib/partDefinitions";
 import { ANIMATION_DEFS, SPRITE_SIZE, DIRECTIONS } from "@/lib/partDefinitions";
@@ -17,12 +17,7 @@ const BG_DARK  = "#181924";
 const BG_LIGHT = "#1d1f32";
 
 function checkerboard(ctx: CanvasRenderingContext2D, w: number, h: number, ts = 16) {
-  for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
-    for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
-      ctx.fillStyle = (tx + ty) % 2 === 0 ? BG_DARK : BG_LIGHT;
-      ctx.fillRect(tx * ts, ty * ts, ts, ts);
-    }
-  }
+  drawCheckerboard(ctx, w, h, ts, BG_DARK, BG_LIGHT);
 }
 
 export function CharacterPreview({ config, anim, dir, frame, scale = 4, spritesReady }: Props) {

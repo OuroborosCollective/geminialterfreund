@@ -551,6 +551,61 @@ function drawFallbackCharacter(
 // ─── Utility: Shared Offscreen Canvas (GC Optimization) ───────────
 
 let _scratchCanvas: HTMLCanvasElement | null = null;
+const _patternCache = new Map<string, CanvasPattern>();
+
+/** Returns a cached CanvasPattern for a checkerboard background */
+export function getCheckerboardPattern(
+  ctx: CanvasRenderingContext2D,
+  size: number,
+  color1: string,
+  color2: string,
+): CanvasPattern | null {
+  const key = `${size}-${color1}-${color2}`;
+  if (_patternCache.has(key)) return _patternCache.get(key)!;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = size * 2;
+  canvas.height = size * 2;
+  const pCtx = canvas.getContext("2d")!;
+
+  pCtx.fillStyle = color1;
+  pCtx.fillRect(0, 0, size, size);
+  pCtx.fillRect(size, size, size, size);
+  pCtx.fillStyle = color2;
+  pCtx.fillRect(size, 0, size, size);
+  pCtx.fillRect(0, size, size, size);
+
+  const pattern = ctx.createPattern(canvas, "repeat");
+  if (pattern) _patternCache.set(key, pattern);
+  return pattern;
+}
+
+/**
+ * Draws a checkerboard background on a canvas.
+ * Optimized with cached CanvasPattern to reduce O(N^2) draw calls to O(1).
+ */
+export function drawCheckerboard(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  ts: number,
+  color1: string,
+  color2: string,
+) {
+  const pattern = getCheckerboardPattern(ctx, ts, color1, color2);
+  if (pattern) {
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, w, h);
+  } else {
+    // Fallback if pattern creation fails
+    for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
+      for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
+        ctx.fillStyle = (tx + ty) % 2 === 0 ? color1 : color2;
+        ctx.fillRect(tx * ts, ty * ts, ts, ts);
+      }
+    }
+  }
+}
 
 /** Returns a shared 96x96 offscreen canvas to reduce GC pressure during animation loops */
 export function getScratchCanvas(): { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D } {
