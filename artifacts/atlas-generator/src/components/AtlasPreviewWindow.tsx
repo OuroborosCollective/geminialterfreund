@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CharacterConfig } from "@/lib/characterAssembler";
 import { packAtlas } from "@/lib/atlasPacker";
 import type { PackRequest } from "@/lib/atlasPacker";
+import { drawCheckerboard } from "@/lib/spriteRenderer";
 import { SPRITE_SIZE, RENDER_LAYER_ORDER, ALL_VARIANTS, ARMOR_SCHEMES, SKIN_TONES, HAIR_COLORS } from "@/lib/partDefinitions";
 import type { Direction, AnimationName, PartCategory } from "@/lib/partDefinitions";
 import { buildPalette } from "@/lib/palettes";
@@ -54,14 +55,8 @@ export function AtlasPreviewWindow({ config }: { config: CharacterConfig | null 
       canvas.height = result.atlasHeight;
       const ctx = canvas.getContext("2d")!;
 
-      // Checkerboard
-      const ts = 8;
-      for (let ty = 0; ty < Math.ceil(result.atlasHeight / ts); ty++) {
-        for (let tx = 0; tx < Math.ceil(result.atlasWidth / ts); tx++) {
-          ctx.fillStyle = (tx + ty) % 2 === 0 ? "#181924" : "#1d1f32";
-          ctx.fillRect(tx * ts, ty * ts, ts, ts);
-        }
-      }
+      // Checkerboard — Optimized with cached pattern
+      drawCheckerboard(ctx, result.atlasWidth, result.atlasHeight, 8, "#181924", "#1d1f32");
 
       ctx.drawImage(result.canvas, 0, 0);
 
