@@ -13,6 +13,7 @@ import { AtlasPreviewWindow } from "@/components/AtlasPreviewWindow";
 import { SeedControls } from "@/components/SeedControls";
 import { preloadAllSprites } from "@/lib/spriteLibrary";
 import { ALL_VARIANTS } from "@/lib/partDefinitions";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 type Tab = "builder" | "directions" | "strip" | "atlas" | "export" | "armor";
 
@@ -131,17 +132,25 @@ export function GeneratorPage() {
                 </div>
               </div>
               <div>
-                <label htmlFor="equipment-color" className="text-[10px] text-muted-foreground/50">Equipment color</label>
-                <select
-                  id="equipment-color"
-                  value={schemeId}
-                  onChange={e => setSchemeId(e.target.value)}
-                  className="mt-0.5 w-full bg-white/5 border border-white/10 rounded text-xs px-1.5 py-1 text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
-                >
+                <label className="text-[10px] text-muted-foreground/50">Equipment color</label>
+                <div className="flex flex-wrap gap-1 mt-0.5">
                   {ARMOR_SCHEMES.map(s => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
+                    <Tooltip key={s.id}>
+                      <TooltipTrigger asChild>
+                        <button
+                          aria-label={`Equipment color: ${s.name}`}
+                          aria-pressed={schemeId === s.id}
+                          onClick={() => setSchemeId(s.id)}
+                          className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${schemeId === s.id ? "border-accent scale-125" : "border-transparent"}`}
+                          style={{ background: s.primary }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        {s.name}
+                      </TooltipContent>
+                    </Tooltip>
                   ))}
-                </select>
+                </div>
               </div>
             </div>
           </div>
