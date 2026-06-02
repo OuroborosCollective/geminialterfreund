@@ -1,5 +1,6 @@
 import { ANIMATIONS, ANIMATION_DEFS, DIRECTIONS } from "@/lib/partDefinitions";
 import type { AnimationName, Direction } from "@/lib/partDefinitions";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const ANIM_ICONS: Record<AnimationName, string> = {
   idle:     "⏸",
@@ -23,6 +24,17 @@ const DIR_ICONS: Record<Direction, string> = {
   northeast: "↗ NE",
   east:      "→ E",
   southeast: "↘ SE",
+};
+
+const DIR_LABELS: Record<Direction, string> = {
+  south:     "South",
+  southwest: "Southwest",
+  west:      "West",
+  northwest: "Northwest",
+  north:     "North",
+  northeast: "Northeast",
+  east:      "East",
+  southeast: "Southeast",
 };
 
 interface Props {
@@ -53,11 +65,11 @@ export function AnimationControls({
               key={a}
               onClick={() => onAnimChange(a)}
               aria-pressed={a === anim}
-              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
+              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 a === anim
                   ? "bg-primary/20 border border-primary/60 text-primary font-semibold"
                   : "bg-muted/30 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              } focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none`}
+              }`}
             >
               <span aria-hidden="true">{ANIM_ICONS[a]}</span>
               <span className="capitalize">{a}</span>
@@ -72,18 +84,25 @@ export function AnimationControls({
         <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Direction</div>
         <div className="grid grid-cols-4 gap-1">
           {DIRECTIONS.map(d => (
-            <button
-              key={d}
-              onClick={() => onDirChange(d)}
-              aria-pressed={d === dir}
-              className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
-                d === dir
-                  ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
-                  : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
-              } focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`}
-            >
-              {DIR_ICONS[d]}
-            </button>
+            <Tooltip key={d}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onDirChange(d)}
+                  aria-pressed={d === dir}
+                  aria-label={DIR_LABELS[d]}
+                  className={`px-2 py-1 rounded text-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                    d === dir
+                      ? "bg-accent/20 border border-accent/60 text-accent font-semibold"
+                      : "bg-muted/30 border border-border/40 text-muted-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <span aria-hidden="true">{DIR_ICONS[d]}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <p>{DIR_LABELS[d]}</p>
+              </TooltipContent>
+            </Tooltip>
           ))}
         </div>
       </div>
@@ -97,7 +116,7 @@ export function AnimationControls({
           <button
             onClick={onTogglePlay}
             aria-label={playing ? "Pause animation" : "Play animation"}
-            className="px-3 py-1.5 rounded bg-primary/20 border border-primary/50 text-primary hover:bg-primary/30 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="px-3 py-1.5 rounded bg-primary/20 border border-primary/50 text-primary hover:bg-primary/30 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {playing ? "⏸ Pause" : "▶ Play"}
           </button>
