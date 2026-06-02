@@ -1,4 +1,9 @@
-import express, { type Express } from "express";
+import express, {
+  type Express,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
@@ -39,5 +44,15 @@ app.use(express.json({ limit: "10kb" })); // Security: Limit body size to mitiga
 app.use(express.urlencoded({ extended: true, limit: "10kb" })); // Security: Limit body size to mitigate DoS
 
 app.use("/api", router);
+
+// Global error handler: sanitized response and centralized logging
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
+  const reqLog = (req as any).log || logger;
+  reqLog.error({ err }, "Unhandled application error");
+
+  res.status(500).json({
+    error: "Internal Server Error",
+  });
+});
 
 export default app;
