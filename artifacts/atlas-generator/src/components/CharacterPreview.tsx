@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { drawCharacterFrame, getScratchCanvas } from "@/lib/spriteRenderer";
+import { drawCharacterFrame, getScratchCanvas, drawCheckerboard } from "@/lib/spriteRenderer";
 import type { CharacterConfig } from "@/lib/characterAssembler";
 import type { AnimationName, Direction } from "@/lib/partDefinitions";
 import { ANIMATION_DEFS, SPRITE_SIZE, DIRECTIONS } from "@/lib/partDefinitions";
@@ -13,18 +13,6 @@ interface Props {
   spritesReady?: boolean;
 }
 
-const BG_DARK  = "#181924";
-const BG_LIGHT = "#1d1f32";
-
-function checkerboard(ctx: CanvasRenderingContext2D, w: number, h: number, ts = 16) {
-  for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
-    for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
-      ctx.fillStyle = (tx + ty) % 2 === 0 ? BG_DARK : BG_LIGHT;
-      ctx.fillRect(tx * ts, ty * ts, ts, ts);
-    }
-  }
-}
-
 export function CharacterPreview({ config, anim, dir, frame, scale = 4, spritesReady }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -34,7 +22,7 @@ export function CharacterPreview({ config, anim, dir, frame, scale = 4, spritesR
     const ctx = canvas.getContext("2d")!;
     const displaySize = SPRITE_SIZE * scale;
 
-    checkerboard(ctx, displaySize, displaySize);
+    drawCheckerboard(ctx, displaySize, displaySize, 16);
 
     if (!config) {
       ctx.fillStyle = "rgba(255,255,255,0.12)";
@@ -79,7 +67,7 @@ export function DirectionGrid({ config, anim, frame }: {
       if (!canvas) return;
       const ctx = canvas.getContext("2d")!;
       const size = SPRITE_SIZE * 2;
-      checkerboard(ctx, size, size, 8);
+      drawCheckerboard(ctx, size, size, 8);
       const { canvas: off, ctx: offCtx } = getScratchCanvas();
       drawCharacterFrame(offCtx, 0, 0, dir, anim, frame, config.palette, config.layers);
       ctx.imageSmoothingEnabled = false;
