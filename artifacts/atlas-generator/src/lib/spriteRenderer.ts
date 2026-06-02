@@ -548,6 +548,40 @@ function drawFallbackCharacter(
   ctx.beginPath(); ctx.ellipse(cx + ox, headCY - hh * 0.12, Math.abs(hw) + 1.5, hh * 0.88, 0, Math.PI, 0); ctx.fill();
 }
 
+// ─── Utility: Optimized Checkerboard (O(1) Draw) ──────────────────
+
+const _patternCache = new Map<number, CanvasPattern>();
+
+/** Draws a checkerboard background using a cached CanvasPattern for O(1) performance */
+export function drawCheckerboard(
+  ctx: CanvasRenderingContext2D,
+  w: number, h: number,
+  tileSize = 16,
+): void {
+  let pattern = _patternCache.get(tileSize);
+
+  if (!pattern) {
+    const pCanvas = document.createElement("canvas");
+    pCanvas.width = tileSize * 2;
+    pCanvas.height = tileSize * 2;
+    const pCtx = pCanvas.getContext("2d")!;
+
+    pCtx.fillStyle = "#1d1f32"; // BG_LIGHT
+    pCtx.fillRect(0, 0, tileSize * 2, tileSize * 2);
+    pCtx.fillStyle = "#181924"; // BG_DARK
+    pCtx.fillRect(0, 0, tileSize, tileSize);
+    pCtx.fillRect(tileSize, tileSize, tileSize, tileSize);
+
+    pattern = ctx.createPattern(pCanvas, "repeat")!;
+    _patternCache.set(tileSize, pattern);
+  }
+
+  ctx.save();
+  ctx.fillStyle = pattern;
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+}
+
 // ─── Utility: Shared Offscreen Canvas (GC Optimization) ───────────
 
 let _scratchCanvas: HTMLCanvasElement | null = null;

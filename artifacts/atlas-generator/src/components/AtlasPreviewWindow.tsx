@@ -5,6 +5,7 @@ import type { PackRequest } from "@/lib/atlasPacker";
 import { SPRITE_SIZE, RENDER_LAYER_ORDER, ALL_VARIANTS, ARMOR_SCHEMES, SKIN_TONES, HAIR_COLORS } from "@/lib/partDefinitions";
 import type { Direction, AnimationName, PartCategory } from "@/lib/partDefinitions";
 import { buildPalette } from "@/lib/palettes";
+import { drawCheckerboard } from "@/lib/spriteRenderer";
 
 const PREVIEW_DIRS: Direction[]     = ["south", "west", "north", "east"];
 const PREVIEW_ANIMS: AnimationName[] = ["idle", "walk", "attack"];
@@ -55,13 +56,7 @@ export function AtlasPreviewWindow({ config }: { config: CharacterConfig | null 
       const ctx = canvas.getContext("2d")!;
 
       // Checkerboard
-      const ts = 8;
-      for (let ty = 0; ty < Math.ceil(result.atlasHeight / ts); ty++) {
-        for (let tx = 0; tx < Math.ceil(result.atlasWidth / ts); tx++) {
-          ctx.fillStyle = (tx + ty) % 2 === 0 ? "#181924" : "#1d1f32";
-          ctx.fillRect(tx * ts, ty * ts, ts, ts);
-        }
-      }
+      drawCheckerboard(ctx, result.atlasWidth, result.atlasHeight, 8);
 
       ctx.drawImage(result.canvas, 0, 0);
 
