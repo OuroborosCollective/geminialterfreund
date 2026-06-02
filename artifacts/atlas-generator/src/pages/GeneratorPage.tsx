@@ -11,6 +11,7 @@ import { ExportPanel } from "@/components/ExportPanel";
 import { ArmorExportPanel } from "@/components/ArmorExportPanel";
 import { AtlasPreviewWindow } from "@/components/AtlasPreviewWindow";
 import { SeedControls } from "@/components/SeedControls";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { preloadAllSprites } from "@/lib/spriteLibrary";
 import { ALL_VARIANTS } from "@/lib/partDefinitions";
 
@@ -102,15 +103,20 @@ export function GeneratorPage() {
                 <label className="text-[10px] text-muted-foreground/50">Skin tone</label>
                 <div className="flex flex-wrap gap-1 mt-0.5">
                   {SKIN_TONES.map(s => (
-                    <button
-                      key={s.id}
-                      title={s.name}
-                      aria-label={`Skin tone: ${s.name}`}
-                      aria-pressed={skinId === s.id}
-                      onClick={() => setSkinId(s.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${skinId === s.id ? "border-accent scale-125" : "border-transparent"}`}
-                      style={{ background: s.hex }}
-                    />
+                    <Tooltip key={s.id}>
+                      <TooltipTrigger asChild>
+                        <button
+                          aria-label={`Skin tone: ${s.name}`}
+                          aria-pressed={skinId === s.id}
+                          onClick={() => setSkinId(s.id)}
+                          className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${skinId === s.id ? "border-accent scale-125" : "border-transparent"}`}
+                          style={{ background: s.hex }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="text-[10px] py-1 px-2">
+                        {s.name}
+                      </TooltipContent>
+                    </Tooltip>
                   ))}
                 </div>
               </div>
@@ -118,15 +124,20 @@ export function GeneratorPage() {
                 <label className="text-[10px] text-muted-foreground/50">Hair color</label>
                 <div className="flex flex-wrap gap-1 mt-0.5">
                   {HAIR_COLORS.map(h => (
-                    <button
-                      key={h.id}
-                      title={h.name}
-                      aria-label={`Hair color: ${h.name}`}
-                      aria-pressed={hairId === h.id}
-                      onClick={() => setHairId(h.id)}
-                      className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${hairId === h.id ? "border-accent scale-125" : "border-transparent"}`}
-                      style={{ background: h.hex }}
-                    />
+                    <Tooltip key={h.id}>
+                      <TooltipTrigger asChild>
+                        <button
+                          aria-label={`Hair color: ${h.name}`}
+                          aria-pressed={hairId === h.id}
+                          onClick={() => setHairId(h.id)}
+                          className={`w-5 h-5 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#13151f] ${hairId === h.id ? "border-accent scale-125" : "border-transparent"}`}
+                          style={{ background: h.hex }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="text-[10px] py-1 px-2">
+                        {h.name}
+                      </TooltipContent>
+                    </Tooltip>
                   ))}
                 </div>
               </div>
